@@ -3,12 +3,12 @@ Easy GoAgent
 
 开箱即用&长期更新优质IP的GoAgent
 
-##Update
+Update
 ----------------
 
 + 2015.1.22 项目Start!
 
-##说明
+说明
 -----------------
 
 GoAgent 是我使用的第一个翻墙软件, 是它让我看到了更广阔的世界, 但随着 Google 被墙, 免费的 GoAgent 可用性和易用性变差, 收费的翻墙工具当道, 翻墙的代价和门槛由此升高, 所以我准备做点什么.
@@ -18,17 +18,17 @@ Across the Great Wall, we can reach every corner in the world.
 欢迎来到真正的互联网.
 
 
-##项目前身
+项目前身
 ------------------
 
 [GoAgent必备 Google IP | Anotherhome](http://www.anotherhome.net/1573)
 
-##版本
+版本
 ---------------
 
 GoAgent V3.1.31
 
-##食用方法
+食用方法
 ---------------------
 
 ####Windows
@@ -58,12 +58,12 @@ sudo python EasyGoAgent/local/addto-startup.py
 
 使用方法:[GoGo Tester—复活你的GoAgent](http://www.anotherhome.net/1362)
 
-##联系我
+联系我
 -----------------------
 
 欢迎[在此](http://www.anotherhome.net/1727)留言或 Pull Requests 来提供优质IP或可用Appid
 
-##鸣谢
+鸣谢
 
 ####GoAgent项目
 [主页](https://github.com/goagent/goagent)
