@@ -46,9 +46,9 @@ sudo python EasyGoAgent/local/addto-startup.py
 
 ####Chrome浏览器 配合扩展 SwitchyOmega 使用
 
-1.安装扩展EasyGoAgent/SwitchyOmega/SwitchyOmega.crx
+1.安装扩展`EasyGoAgent/SwitchyOmega/SwitchyOmega.crx`
 
-2.导入备份EasyGoAgent/SwitchyOmega/SwitchyOptions.bak
+2.导入备份`EasyGoAgent/SwitchyOmega/SwitchyOptions.bak`
 
 ####如何更新
 
@@ -64,6 +64,7 @@ sudo python EasyGoAgent/local/addto-startup.py
 欢迎[在此](http://www.anotherhome.net/1727)留言或 Pull Requests 来提供优质IP或可用Appid
 
 鸣谢
+--------------------
 
 ####GoAgent项目
 [主页](https://github.com/goagent/goagent)
