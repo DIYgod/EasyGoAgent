@@ -61,7 +61,7 @@ sudo python EasyGoAgent/local/addto-startup.py
 ##联系我
 -----------------------
 
-欢迎[在此]()留言或 Pull Requests 来提供优质IP或可用Appid
+欢迎[在此](http://www.anotherhome.net/1727)留言或 Pull Requests 来提供优质IP或可用Appid
 
 ##鸣谢
 
