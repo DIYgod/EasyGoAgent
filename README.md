@@ -67,7 +67,7 @@ Across the Great Wall, we can reach every corner in the world.
 联系我
 -----------------------
 
-+ 欢迎[在此](http://www.anotherhome.net/1727)留言或 Pull Requests 来提供优质IP或可用Appid
++ 欢迎[在此](http://www.anotherhome.net/1727)留言或 Pull Requests 来提供优质IP*(延迟300以内)*或可用Appid
 
 鸣谢
 --------------------
