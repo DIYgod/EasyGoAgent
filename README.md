@@ -26,6 +26,8 @@ Across the Great Wall, we can reach every corner in the world.
 食用方法
 ---------------------
 
++ 详细教程见[EasyGoAgent — 开箱即用的GoAgent | Anotherhome](http://www.anotherhome.net/1727)
+
 + Windows
 
 ```
