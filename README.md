@@ -28,43 +28,16 @@ Across the Great Wall, we can reach every corner in the world.
 
 + 详细教程见[EasyGoAgent — 开箱即用的GoAgent | Anotherhome](http://www.anotherhome.net/1727)
 
-+ Windows
+Make Contributions
+-------------------
 
-```
-	1.右键 `goagent.exe` -> 以管理员身份运行
-	2.双击 `addto-startup.js` -> 确定
-```
+1.提供Appid
 
-+ Linux
+2.提供优质IP
 
-```
-	sudo python EasyGoAgent/local/goagent-gtk.py
-	sudo python EasyGoAgent/local/addto-startup.py
-```
+要求: 延迟300-, 地区差异小
 
-+ Chrome浏览器 配合扩展 SwitchyOmega 使用
-
-```
-	1.安装扩展`EasyGoAgent/SwitchyOmega/SwitchyOmega.crx`
-	2.导入备份`EasyGoAgent/SwitchyOmega/SwitchyOptions.bak`
-```
-
-+ 如何更新
-
-```
-	替换 `local/proxy.ini` 即可
-```
-
-+ GoGo Tester 用来自行寻找IP
-
-```
-	使用方法:[GoGo Tester—复活你的GoAgent](http://www.anotherhome.net/1362)
-```
-
-联系我
------------------------
-
-+ 欢迎[在此](http://www.anotherhome.net/1727)留言或 Pull Requests 来提供优质IP*(延迟300以内)*或可用Appid
+推荐工具: [GoGo Tester](http://www.anotherhome.net/1362) [奇云测](http://ce.cloud.360.cn/)
 
 鸣谢
 --------------------
