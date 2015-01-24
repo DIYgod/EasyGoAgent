@@ -81,6 +81,7 @@ Across the Great Wall, we can reach every corner in the world.
 	JET•Rebirth
 	max
 	夜绫千裕
+	JET•Rebirth
 ```
 
 + IP提供者
