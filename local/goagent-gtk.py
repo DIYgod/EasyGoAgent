@@ -80,7 +80,7 @@ try:
     import pygtk
     pygtk.require('2.0')
     import gtk
-    gtk.gdk.threads_init()
+    # gtk.gdk.threads_init()
 except Exception:
     sys.exit(os.system(u'gdialog --title "GoAgent GTK" --msgbox "\u8bf7\u5b89\u88c5 python-gtk2" 15 60'.encode(sys.getfilesystemencoding() or sys.getdefaultencoding(), 'replace')))
 try:

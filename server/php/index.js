@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-var __version__  = '3.1.2';
+var __version__  = '3.2.0';
 var __password__ = '123456';
 var __hostsdeny__ = []; // var __hostsdeny__ = ['.youtube.com', '.youku.com'];
 var __content_type__ = 'image/gif';
@@ -56,22 +56,24 @@ function decode_request(data, callback) {
     request.body = data.slice(2+headers_length);
 
     zlib.inflateRaw(data.slice(2, 2+headers_length), function(error, buff) {
-        buff.toString().split("\n").forEach(function(line) {
+        var lines = buff.toString().split("\r\n");
+        var request_line_items = lines.shift().split(" ");
+        request.method = request_line_items[0];
+        request.url = request_line_items[1];
+        for (var i = 0; i < lines.length; i++) {
+            var line = lines[i];
             var pos = line.indexOf(':');
             if (pos > 0) {
                 var key = line.substring(0, pos);
-                var value = line.substring(pos+1);
-                if (key == 'G-Method') {
-                    request.method = value;
-                } else if (key == 'G-Url') {
-                    request.url = value;
-                } else if (key.indexOf('G-') == 0) {
-                    request.kwargs[key.substring(2)] = value;
+                var value = line.substring(pos+1).trim();
+                if (key.toLowerCase().indexOf('x-urlfetch-') == 0) {
+                    request.kwargs[key.substring(11).toLowerCase()] = value;
                 } else {
+                    key = key.replace(/\w[^\-]*/g, function(w){return w.charAt(0).toUpperCase() + w.substr(1).toLowerCase();})
                     request.headers[key] = value;
                 }
             }
-        });
+        }
         if (request.headers.hasOwnProperty('Content-Encoding')
             && request.headers['Content-Encoding'] == 'deflate') {
             zlib.inflateRaw(request.body, function(error, buff) {
