@@ -1204,13 +1204,12 @@ class FakeHttpsFilter(BaseProxyHandlerFilter):
 
 class CRLFSitesFilter(BaseProxyHandlerFilter):
     """crlf sites filter"""
-    def __init__(self, crlf_sites, nocrlf_sites):
+    def __init__(self, crlf_sites):
         self.crlf_sites = tuple(crlf_sites)
-        self.nocrlf_sites = set(nocrlf_sites)
 
     def filter(self, handler):
         if handler.command != 'CONNECT' and handler.scheme != 'https':
-            if handler.host.endswith(self.crlf_sites) and handler.host not in self.nocrlf_sites:
+            if handler.host.endswith(self.crlf_sites):
                 logging.debug('CRLFSitesFilter metched %r %r', handler.path, handler.headers)
                 handler.close_connection = True
                 return 'direct', {'crlf': True}
@@ -1218,58 +1217,18 @@ class CRLFSitesFilter(BaseProxyHandlerFilter):
 
 class URLRewriteFilter(BaseProxyHandlerFilter):
     """url rewrite filter"""
-    def __init__(self, urlrewrite_map):
-        self.urlrewrite_map = {}
-        for regex, repl in urlrewrite_map.items():
-            mo = re.search(r'://([^/:]+)', regex)
-            if not mo:
-                logging.warning('URLRewriteFilter does not support regex: %r', regex)
-                continue
-            addr = mo.group(1).replace(r'\.', '.')
-            mo = re.match(r'[\w\-\_\d\[\]\:]+', addr)
-            if not mo:
-                logging.warning('URLRewriteFilter does not support wildcard host: %r', addr)
-            self.urlrewrite_map.setdefault(addr, []).append((re.compile(regex).search, repl))
-
+    rules = {
+                'www.google.com': (r'^https?://www\.google\.com/(?:imgres|url)\?.*url=([^&]+)', lambda m: urllib.unquote_plus(m.group(1))),
+                'www.google.com.hk': (r'^https?://www\.google\.com\.hk/url\?.*url=([^&]+)', lambda m: urllib.unquote_plus(m.group(1))),
+            }
     def filter(self, handler):
-        if handler.host not in self.urlrewrite_map:
-            return
-        for match, repl in self.urlrewrite_map[handler.host]:
-            mo = match(handler.path)
-            if mo:
+        if handler.host in self.rules:
+            pattern, callback = self.rules[handler.host]
+            m = re.search(pattern, handler.path)
+            if m:
                 logging.debug('URLRewriteFilter metched %r', handler.path)
-                if repl.startswith('file://'):
-                    return self.filter_localfile(handler, mo, repl)
-                else:
-                    return self.filter_redirect(handler, mo, repl)
-
-    def filter_redirect(self, handler, mo, repl):
-        for i, g in enumerate(mo.groups()):
-            repl = repl.replace('$%d' % (i+1), urllib.unquote_plus(g))
-        headers = {'Location': repl, 'Connection': 'close'}
-        return 'mock', {'status': 301, 'headers': headers, 'body': ''}
-
-    def filter_localfile(self, handler, mo, repl):
-        filename = repl.lstrip('file://')
-        if filename.lower() in ('/dev/null', 'nul'):
-            filename = os.devnull
-        if os.name == 'nt':
-            filename = filename.lstrip('/')
-        content_type = None
-        try:
-            import mimetypes
-            content_type = mimetypes.types_map.get(os.path.splitext(filename)[1])
-        except StandardError as e:
-            logging.error('import mimetypes failed: %r', e)
-        try:
-            with open(filename, 'rb') as fp:
-                data = fp.read()
-                headers = {'Connection': 'close', 'Content-Length': str(len(data))}
-                if content_type:
-                    headers['Content-Type'] = content_type
-                return 'mock', {'status': 200, 'headers': headers, 'body': data}
-        except StandardError as e:
-            return 'mock', {'status': 403, 'headers': {'Connection': 'close'}, 'body': 'read %r %r' % (filename, e)}
+                headers = {'Location': callback(m), 'Connection': 'close'}
+                return 'mock', {'status': 301, 'headers': headers, 'body': ''}
 
 
 class AutoRangeFilter(BaseProxyHandlerFilter):
@@ -1820,7 +1779,6 @@ class MultipleConnectionMixin(object):
         except Queue.Empty:
             pass
         addresses = [(x, port) for x in self.gethostbyname2(hostname)]
-        #logging.info('gethostbyname2(%r) return %d addresses', hostname, len(addresses))
         sock = None
         for i in range(kwargs.get('max_retry', 5)):
             reorg_ipaddrs()
