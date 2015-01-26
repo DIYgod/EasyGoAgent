@@ -21,7 +21,7 @@ Across the Great Wall, we can reach every corner in the world.
 版本
 ---------------
 
-+ GoAgent V3.1.31
++ GoAgent V3.2.3
 
 食用方法
 ---------------------
