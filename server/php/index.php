@@ -48,21 +48,24 @@ function decode_request($data) {
     $headers_data = gzinflate(substr($data, 2, $headers_length));
     $body = substr($data, 2+intval($headers_length));
 
-    $method  = '';
-    $url     = '';
+    $lines = explode("\r\n", $headers_data);
+
+    $request_line_items = explode(" ", array_shift($lines));
+    $method = $request_line_items[0];
+    $url = $request_line_items[1];
+
     $headers = array();
     $kwargs  = array();
+    $kwargs_prefix = 'X-URLFETCH-';
 
-    foreach (explode("\n", $headers_data) as $kv) {
-        $pair = explode(':', $kv, 2);
+    foreach ($lines as $line) {
+        if (!$line)
+            continue;
+        $pair = explode(':', $line, 2);
         $key  = $pair[0];
         $value = trim($pair[1]);
-        if ($key == 'G-Method') {
-            $method = $value;
-        } else if ($key == 'G-Url') {
-            $url = $value;
-        } else if (substr($key, 0, 2) == 'G-') {
-            $kwargs[strtolower(substr($key, 2))] = $value;
+        if (stripos($key, $kwargs_prefix) === 0) {
+            $kwargs[strtolower(substr($key, strlen($kwargs_prefix)))] = $value;
         } else if ($key) {
             $key = join('-', array_map('ucfirst', explode('-', $key)));
             $headers[$key] = $value;
@@ -130,7 +133,7 @@ function post() {
     if ($password) {
         if (!isset($kwargs['password']) || $password != $kwargs['password']) {
             header("HTTP/1.0 403 Forbidden");
-            echo message_html('403 Forbidden', 'Wrong Password', 'please edit proxy.ini');
+            echo message_html('403 Forbidden', 'Wrong Password', "please edit proxy.ini");
             exit(-1);
         }
     }

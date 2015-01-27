@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding:utf-8
 
-__version__ = '3.1.4'
+__version__ = '3.2.0'
 __password__ = '123456'
 __hostsdeny__ = ()  # __hostsdeny__ = ('.youtube.com', '.youku.com')
 __content_type__ = 'image/gif'
@@ -28,6 +28,17 @@ import struct
 import zlib
 import collections
 import Queue
+
+try:
+    import socket
+    import select
+    sock = socket.create_connection(('8.8.8.8', 53), timeout=1)
+    assert select.select([], [sock], [], 0.1)[1]
+    sock.close()
+    del sock
+except Exception:
+    socket = select = None
+
 
 normcookie = functools.partial(re.compile(', ([^ =]+(?:=|$))').sub, '\\r\\nSet-Cookie: \\1')
 
@@ -80,14 +91,19 @@ class XORCipher(object):
 
 
 def decode_request(data):
-    metadata_length, = struct.unpack('!h', data[:2])
-    metadata = zlib.decompress(data[2:2+metadata_length], -zlib.MAX_WBITS)
-    body = data[2+metadata_length:]
-    headers = dict(x.split(':', 1) for x in metadata.splitlines() if x)
-    method = headers.pop('G-Method')
-    url = headers.pop('G-Url')
+    payload_length, = struct.unpack('!h', data[:2])
+    payload = zlib.decompress(data[2:2+payload_length], -zlib.MAX_WBITS)
+    body = data[2+payload_length:]
+    raw_response_line, payload = payload.split('\r\n', 1)
+    method, url = raw_response_line.split()[:2]
+    headers = {}
+    for line in payload.splitlines():
+        if not line:
+            continue
+        key, value = line.split(':', 1)
+        headers[key.title()] = value.strip()
     kwargs = {}
-    any(kwargs.__setitem__(x[2:].lower(), headers.pop(x)) for x in headers.keys() if x.startswith('G-'))
+    any(kwargs.__setitem__(x[11:].lower(), headers.pop(x)) for x in headers.keys() if x.lower().startswith('x-urlfetch-'))
     if headers.get('Content-Encoding', '') == 'deflate':
         body = zlib.decompress(body, -zlib.MAX_WBITS)
         headers['Content-Length'] = str(len(body))

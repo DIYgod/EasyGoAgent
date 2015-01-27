@@ -124,6 +124,7 @@ def dnslib_resolve_over_udp(query, dnsservers, timeout, **kwargs):
     http://gfwrev.blogspot.com/2009/11/gfwdns.html
     http://zh.wikipedia.org/wiki/%E5%9F%9F%E5%90%8D%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BC%93%E5%AD%98%E6%B1%A1%E6%9F%93
     http://support.microsoft.com/kb/241352
+    https://gist.github.com/klzgrad/f124065c0616022b65e5
     """
     if not isinstance(query, (basestring, dnslib.DNSRecord)):
         raise TypeError('query argument requires string/DNSRecord')
@@ -145,8 +146,12 @@ def dnslib_resolve_over_udp(query, dnsservers, timeout, **kwargs):
             try:
                 for dnsserver in dns_v4_servers:
                     if isinstance(query, basestring):
+                        if dnsserver in ('8.8.8.8', '8.8.4.4'):
+                            query = '.'.join(x[:-1] + x[-1].upper() for x in query.split('.')).title()
                         query = dnslib.DNSRecord(q=dnslib.DNSQuestion(query))
                     query_data = query.pack()
+                    if query.q.qtype == 1 and dnsserver in ('8.8.8.8', '8.8.4.4'):
+                        query_data = query_data[:-5] + '\xc0\x04' + query_data[-4:]
                     sock_v4.sendto(query_data, parse_hostport(dnsserver, 53))
                 for dnsserver in dns_v6_servers:
                     if isinstance(query, basestring):
@@ -305,8 +310,8 @@ class DNSServer(gevent.server.DatagramServer):
 
 def test():
     logging.basicConfig(level=logging.INFO, format='%(levelname)s - %(asctime)s %(message)s', datefmt='[%b %d %H:%M:%S]')
-    dns_servers = ['114.114.114.114', '114.114.115.115', '8.8.8.8', '8.8.4.4']
-    dns_blacklist = '1.1.1.1|255.255.255.255|74.125.127.102|74.125.155.102|74.125.39.102|74.125.39.113|209.85.229.138|4.36.66.178|8.7.198.45|37.61.54.158|46.82.174.68|59.24.3.173|64.33.88.161|64.33.99.47|64.66.163.251|65.104.202.252|65.160.219.113|66.45.252.237|72.14.205.104|72.14.205.99|78.16.49.15|93.46.8.89|128.121.126.139|159.106.121.75|169.132.13.103|192.67.198.6|202.106.1.2|202.181.7.85|203.161.230.171|203.98.7.65|207.12.88.98|208.56.31.43|209.145.54.50|209.220.30.174|209.36.73.33|209.85.229.138|211.94.66.147|213.169.251.35|216.221.188.182|216.234.179.13|243.185.187.3|243.185.187.39'.split('|')
+    dns_servers = '8.8.8.8|8.8.4.4|168.95.1.1|168.95.192.1|223.5.5.5|223.6.6.6|114.114.114.114|114.114.115.115'.split('|')
+    dns_blacklist = '1.1.1.1|255.255.255.255|74.125.127.102|74.125.155.102|74.125.39.102|74.125.39.113|209.85.229.138|4.36.66.178|8.7.198.45|37.61.54.158|46.82.174.68|59.24.3.173|64.33.88.161|64.33.99.47|64.66.163.251|65.104.202.252|65.160.219.113|66.45.252.237|72.14.205.104|72.14.205.99|78.16.49.15|93.46.8.89|128.121.126.139|159.106.121.75|169.132.13.103|192.67.198.6|202.106.1.2|202.181.7.85|203.161.230.171|203.98.7.65|207.12.88.98|208.56.31.43|209.145.54.50|209.220.30.174|209.36.73.33|211.94.66.147|213.169.251.35|216.221.188.182|216.234.179.13|243.185.187.3|243.185.187.39|23.89.5.60|37.208.111.120|49.2.123.56|54.76.135.1|77.4.7.92|118.5.49.6|188.5.4.96|189.163.17.5|197.4.4.12|249.129.46.48|253.157.14.165|183.207.229.|183.207.232.'.split('|')
     dns_tcpover = ['.youtube.com', '.googlevideo.com']
     logging.info('serving at port 53...')
     DNSServer(('', 53), dns_servers=dns_servers, dns_blacklist=dns_blacklist, dns_tcpover=dns_tcpover).serve_forever()

@@ -5,21 +5,17 @@ api_version: 1
 threadsafe: true
 
 handlers:
-- url: /_gh/.+
+- url: /_gh/.*
   script: gae.application
   secure: optional
 
-- url: /2.*
+- url: /favicon.ico
   script: gae.application
   secure: optional
 
-- url: /fetch\.py
-  script: gae.LegacyHandler.application
+- url: /.*
+  script: legacy.application
   secure: optional
-
-- url: /robots.txt
-  static_files: robots.txt
-  upload: robots.txt
 
 libraries:
 - name: pycrypto
