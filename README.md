@@ -1,7 +1,7 @@
 Easy GoAgent
 ===================
 
-开箱即用&长期更新优质IP的GoAgent
+开箱即用&在线更新优质IP&跨平台的GoAgent
 
 说明
 -----------------
@@ -12,7 +12,6 @@ Across the Great Wall, we can reach every corner in the world.
 
 欢迎来到真正的互联网.
 
-
 项目前身
 ------------------
 
@@ -22,6 +21,17 @@ Across the Great Wall, we can reach every corner in the world.
 ---------------
 
 + GoAgent V3.2.3
+
+在线更新
+-------------------
+
++ 使用方法
+```
+	1.无jre运行环境: 直接双击 `update/update.exe` 即可在线更新
+	2.有jre运行环境和Linux用户: 命令行执行 `java -jre update/update.jre`
+```
+
++ 兼容原生GoAgent: GoAgent用户可直接下载运行在线更新程序
 
 食用方法
 ---------------------
