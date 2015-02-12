@@ -25,13 +25,7 @@ Across the Great Wall, we can reach every corner in the world.
 在线更新
 -------------------
 
-+ 使用方法
-```
-	1.无jre运行环境: 直接双击 `update/update.exe` 即可在线更新
-	2.有jre运行环境和Linux用户: 命令行执行 `java -jre update/update.jre`
-```
-
-+ 兼容原生GoAgent: GoAgent用户可直接下载运行在线更新程序
++ 使用方法见[EasyGoAgent — 开箱即用的GoAgent | Anotherhome](http://www.anotherhome.net/1727)
 
 食用方法
 ---------------------
@@ -67,6 +61,9 @@ Make Contributions
 	max
 	夜绫千裕
 	青石___吣碎De人
+	liwanglin12
+	扣去噗忒透
+	腥红唐朝丶月牙天冲
 ```
 
 + IP提供者
@@ -81,4 +78,5 @@ Make Contributions
 	青石___吣碎De人
 	安可
 	张杰
+	liwanglin12
 ```
