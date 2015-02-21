@@ -80,3 +80,7 @@ Make Contributions
 	张杰
 	liwanglin12
 ```
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/DIYgod/easygoagent/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
